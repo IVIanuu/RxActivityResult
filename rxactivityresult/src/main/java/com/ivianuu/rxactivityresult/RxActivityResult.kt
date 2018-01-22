@@ -72,7 +72,7 @@ class RxActivityResultFragment : Fragment() {
         val requestCode = RequestCodeGenerator.generate()
 
         val subject = PublishSubject.create<ActivityResult>()
-        subjects.put(requestCode, subject)
+        subjects[requestCode] = subject
 
         startActivityForResult(intent, requestCode, options)
 
@@ -90,7 +90,7 @@ class RxActivityResultFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG_FRAGMENT = "com.ivianuu.rxandroidresults.RxActivityResultFragment"
+        private const val TAG_FRAGMENT = "com.ivianuu.rxactivityresult.RxActivityResultFragment"
 
         internal fun get(activity: Activity): RxActivityResultFragment {
             val fm = activity.fragmentManager

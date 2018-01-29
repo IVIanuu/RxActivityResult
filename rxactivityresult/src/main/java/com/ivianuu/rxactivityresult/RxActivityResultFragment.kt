@@ -86,6 +86,8 @@ class RxActivityResultFragment : Fragment(), ActivityResultStarter, Application.
             hasRegisteredCallbacks = false
             this.act = null
         }
+
+        activeActivityResultFragments.remove(activity)
     }
 
     private fun startForResult(intent: Intent,

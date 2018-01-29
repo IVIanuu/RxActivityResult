@@ -17,13 +17,15 @@
 package com.ivianuu.rxactivityresult
 
 import android.app.Activity
-import io.reactivex.Maybe
 
 /**
  * Factory for [ActivityResultStarter]'s
  */
 object RxActivityResult {
 
+    /**
+     * Returns a new [ActivityResultStarter]
+     */
     @JvmStatic
     fun get(activity: Activity): ActivityResultStarter {
         return RxActivityResultFragment.get(activity)

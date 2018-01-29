@@ -17,15 +17,22 @@
 package com.ivianuu.rxactivityresult
 
 import android.app.Activity
-import io.reactivex.Maybe
+import android.content.Intent
 
 /**
- * Factory for [ActivityResultStarter]'s
+ * Represents an activity result
  */
-object RxActivityResult {
+data class ActivityResult(val requestCode: Int,
+                          val resultCode: Int,
+                          val data: Intent?) {
 
-    @JvmStatic
-    fun get(activity: Activity): ActivityResultStarter {
-        return RxActivityResultFragment.get(activity)
-    }
+    /**
+     * Returns whether the [resultCode] equals [Activity.RESULT_OK]
+     */
+    fun isOk() = resultCode == Activity.RESULT_OK
+
+    /**
+     * Returns whether the [resultCode] equals [Activity.RESULT_CANCELED]
+     */
+    fun isCanceled() = resultCode == Activity.RESULT_CANCELED
 }

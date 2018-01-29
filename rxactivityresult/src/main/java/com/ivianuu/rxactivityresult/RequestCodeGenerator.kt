@@ -16,16 +16,14 @@
 
 package com.ivianuu.rxactivityresult
 
-import android.app.Activity
-import io.reactivex.Maybe
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * Factory for [ActivityResultStarter]'s
+ * Generates request codes
  */
-object RxActivityResult {
+internal object RequestCodeGenerator {
 
-    @JvmStatic
-    fun get(activity: Activity): ActivityResultStarter {
-        return RxActivityResultFragment.get(activity)
-    }
+    private val seed = AtomicInteger(500)
+
+    internal fun generate() = seed.incrementAndGet()
 }

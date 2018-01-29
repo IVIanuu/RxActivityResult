@@ -16,16 +16,22 @@
 
 package com.ivianuu.rxactivityresult
 
-import android.app.Activity
+import android.content.Intent
+import android.os.Bundle
 import io.reactivex.Maybe
 
 /**
- * Factory for [ActivityResultStarter]'s
+ * Starts activities for result and returns [Maybe]'s of [ActivityResult]'s
  */
-object RxActivityResult {
+interface ActivityResultStarter {
 
-    @JvmStatic
-    fun get(activity: Activity): ActivityResultStarter {
-        return RxActivityResultFragment.get(activity)
-    }
+    /**
+     * Starts the activity for result and maybe emits the [ActivityResult]
+     */
+    fun start(intent: Intent): Maybe<ActivityResult>
+
+    /**
+     * Starts the activity for result and maybe emits the [ActivityResult]
+     */
+    fun start(intent: Intent, options: Bundle): Maybe<ActivityResult>
 }

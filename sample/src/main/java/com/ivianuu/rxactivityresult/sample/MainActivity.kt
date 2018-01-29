@@ -27,7 +27,7 @@ import io.reactivex.disposables.Disposable
 
 class MainActivity : AppCompatActivity() {
 
-    private val rxActivityResult by lazy(LazyThreadSafetyMode.NONE) { RxActivityResult(this) }
+    private val activityResultStarter by lazy { RxActivityResult.get(this) }
 
     private var disposable: Disposable? = null
 
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         findViewById<Button>(R.id.request).setOnClickListener {
-            rxActivityResult.start(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+            activityResultStarter.start(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
                     .subscribe { Log.d("RxActivityResult", "on result $it") }
                     .let { disposable = it }
         }

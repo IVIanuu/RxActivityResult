@@ -17,6 +17,7 @@
 package com.ivianuu.rxactivityresult
 
 import android.app.Activity
+import android.app.Application
 import android.app.Fragment
 import android.content.Context
 import android.content.Intent
@@ -28,11 +29,14 @@ import io.reactivex.subjects.PublishSubject
  * Handles the activity results
  * This class is internal and you should not worry about it
  */
-class RxActivityResultFragment : Fragment(), ActivityResultStarter {
+class RxActivityResultFragment : Fragment(), ActivityResultStarter, Application.ActivityLifecycleCallbacks {
 
     private val subjects = HashMap<Int, PublishSubject<ActivityResult>>()
 
     private val requireActivityActions = ArrayList<(() -> Unit)>()
+
+    private var act: Activity? = null
+    private var hasRegisteredCallbacks = false
 
     init {
         retainInstance = true
@@ -56,6 +60,32 @@ class RxActivityResultFragment : Fragment(), ActivityResultStarter {
 
     override fun start(intent: Intent, options: Bundle): Maybe<ActivityResult> {
         return startForResult(intent, options)
+    }
+
+    override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
+    }
+
+    override fun onActivityStarted(activity: Activity?) {
+    }
+
+    override fun onActivityPaused(activity: Activity?) {
+    }
+
+    override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
+    }
+
+    override fun onActivityResumed(activity: Activity?) {
+    }
+
+    override fun onActivityStopped(activity: Activity?) {
+    }
+
+    override fun onActivityDestroyed(activity: Activity?) {
+        if (this.act == activity) {
+            act?.application?.unregisterActivityLifecycleCallbacks(this)
+            hasRegisteredCallbacks = false
+            this.act = null
+        }
     }
 
     private fun startForResult(intent: Intent,
@@ -88,22 +118,42 @@ class RxActivityResultFragment : Fragment(), ActivityResultStarter {
         }
     }
 
+    private fun registerActivityListener(activity: Activity) {
+        this.act = activity
+
+        if (!hasRegisteredCallbacks) {
+            hasRegisteredCallbacks = true
+            activity.application.registerActivityLifecycleCallbacks(this)
+            activeActivityResultFragments[activity] = this
+        }
+    }
+
     companion object {
         private const val TAG_FRAGMENT = "RxActivityResultFragment"
 
+        private val activeActivityResultFragments = HashMap<Activity, RxActivityResultFragment>()
+        
         internal fun get(activity: Activity): ActivityResultStarter {
-            val fm = activity.fragmentManager
-            var fragment = fm.findFragmentByTag(TAG_FRAGMENT) as RxActivityResultFragment?
-            if (fragment == null) {
-                fragment = RxActivityResultFragment()
-                fm.beginTransaction()
-                    .add(fragment, TAG_FRAGMENT)
-                    .commitAllowingStateLoss()
-                fm.executePendingTransactions()
+            var activityResultFragment = findInActivity(activity)
+            if (activityResultFragment == null) {
+                activityResultFragment = RxActivityResultFragment()
+                activity.fragmentManager.beginTransaction()
+                    .add(activityResultFragment, TAG_FRAGMENT).commit()
             }
 
-            return fragment
+            activityResultFragment.registerActivityListener(activity)
+
+            return activityResultFragment
         }
 
+        private fun findInActivity(activity: Activity): RxActivityResultFragment? {
+            var activityResultFragment = activeActivityResultFragments[activity]
+            if (activityResultFragment == null) {
+                activityResultFragment = activity.fragmentManager
+                    .findFragmentByTag(TAG_FRAGMENT) as RxActivityResultFragment?
+            }
+
+            return activityResultFragment
+        }
     }
 }

@@ -44,7 +44,7 @@ class RxActivityResultFragment : Fragment(), ActivityResultStarter, Application.
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        requireActivityActions.reversed().forEach { it() }
+        requireActivityActions.reversed().forEach { it.invoke() }
         requireActivityActions.clear()
     }
 

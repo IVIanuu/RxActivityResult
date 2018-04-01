@@ -24,10 +24,8 @@ import android.app.Activity
 object RxActivityResult {
 
     /**
-     * Returns a new [ActivityResultStarter]
+     * Returns the [ActivityResultStarter] for the [activity]
      */
     @JvmStatic
-    fun get(activity: Activity): ActivityResultStarter {
-        return RxActivityResultFragment.get(activity)
-    }
+    fun get(activity: Activity) = RxActivityResultFragment.get(activity)
 }

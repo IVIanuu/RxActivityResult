@@ -29,10 +29,12 @@ data class ActivityResult(val requestCode: Int,
     /**
      * Returns whether the [resultCode] equals [Activity.RESULT_OK]
      */
-    fun isOk() = resultCode == Activity.RESULT_OK
+    val isOk: Boolean
+        get() = resultCode == Activity.RESULT_OK
 
     /**
      * Returns whether the [resultCode] equals [Activity.RESULT_CANCELED]
      */
-    fun isCanceled() = resultCode == Activity.RESULT_CANCELED
+    val isCanceled: Boolean
+            get() = resultCode == Activity.RESULT_CANCELED
 }

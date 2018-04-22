@@ -120,7 +120,7 @@ class RxActivityResultFragment : Fragment(), ActivityResultStarter, Application.
     }
 
     companion object {
-        private const val TAG_FRAGMENT = "RxActivityResultFragment"
+        private const val TAG_FRAGMENT = "com.ivianuu.rxactivityresult.RxActivityResultFragment"
 
         private val activeActivityResultFragments = HashMap<Activity, RxActivityResultFragment>()
         

@@ -22,7 +22,6 @@ object Deps {
 
     const val mavenGradlePlugin = "com.github.dcendents:android-maven-gradle-plugin:${Versions.mavenGradle}"
 
-    const val supportAnnotations = "com.android.support:support-annotations:26.1.0" // no bug
     const val supportAppCompat = "com.android.support:appcompat-v7:${Versions.support}"
 
     const val rxJava = "io.reactivex.rxjava2:rxjava:${Versions.rxJava}"

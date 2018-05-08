@@ -26,15 +26,9 @@ data class ActivityResult(val requestCode: Int,
                           val resultCode: Int,
                           val data: Intent?) {
 
-    /**
-     * Returns whether the [resultCode] equals [Activity.RESULT_OK]
-     */
     val isOk: Boolean
         get() = resultCode == Activity.RESULT_OK
 
-    /**
-     * Returns whether the [resultCode] equals [Activity.RESULT_CANCELED]
-     */
     val isCanceled: Boolean
             get() = resultCode == Activity.RESULT_CANCELED
 }

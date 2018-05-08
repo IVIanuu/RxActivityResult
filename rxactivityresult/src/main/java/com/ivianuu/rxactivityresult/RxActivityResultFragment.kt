@@ -27,7 +27,6 @@ import io.reactivex.subjects.PublishSubject
 
 /**
  * Handles the activity results
- * This class is internal and you should not worry about it
  */
 class RxActivityResultFragment : Fragment(), ActivityResultStarter, Application.ActivityLifecycleCallbacks {
 

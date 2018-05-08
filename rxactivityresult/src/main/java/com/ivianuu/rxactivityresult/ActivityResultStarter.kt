@@ -25,13 +25,7 @@ import io.reactivex.Maybe
  */
 interface ActivityResultStarter {
 
-    /**
-     * Starts the activity for result and maybe emits the [ActivityResult]
-     */
     fun start(intent: Intent): Maybe<ActivityResult>
 
-    /**
-     * Starts the activity for result and maybe emits the [ActivityResult]
-     */
     fun start(intent: Intent, options: Bundle): Maybe<ActivityResult>
 }

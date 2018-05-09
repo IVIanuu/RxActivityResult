@@ -142,7 +142,7 @@ class RxActivityResultFragment : Fragment(), ActivityResultStarter, Application.
         private fun findInActivity(activity: FragmentActivity): RxActivityResultFragment? {
             var activityResultFragment = activeActivityResultFragments[activity]
             if (activityResultFragment == null) {
-                activityResultFragment = activity.fragmentManager
+                activityResultFragment = activity.supportFragmentManager
                     .findFragmentByTag(TAG_FRAGMENT) as RxActivityResultFragment?
             }
 

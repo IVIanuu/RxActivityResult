@@ -18,10 +18,11 @@ package com.ivianuu.rxactivityresult
 
 import android.app.Activity
 import android.app.Application
-import android.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
 import io.reactivex.Maybe
 import io.reactivex.subjects.PublishSubject
 
@@ -123,12 +124,14 @@ class RxActivityResultFragment : Fragment(), ActivityResultStarter, Application.
 
         private val activeActivityResultFragments = HashMap<Activity, RxActivityResultFragment>()
         
-        internal fun get(activity: Activity): ActivityResultStarter {
+        internal fun get(activity: FragmentActivity): ActivityResultStarter {
             var activityResultFragment = findInActivity(activity)
             if (activityResultFragment == null) {
                 activityResultFragment = RxActivityResultFragment()
-                activity.fragmentManager.beginTransaction()
-                    .add(activityResultFragment, TAG_FRAGMENT).commit()
+                activity.supportFragmentManager
+                    .beginTransaction()
+                    .add(activityResultFragment, TAG_FRAGMENT)
+                    .commit()
             }
 
             activityResultFragment.registerActivityListener(activity)
@@ -136,7 +139,7 @@ class RxActivityResultFragment : Fragment(), ActivityResultStarter, Application.
             return activityResultFragment
         }
 
-        private fun findInActivity(activity: Activity): RxActivityResultFragment? {
+        private fun findInActivity(activity: FragmentActivity): RxActivityResultFragment? {
             var activityResultFragment = activeActivityResultFragments[activity]
             if (activityResultFragment == null) {
                 activityResultFragment = activity.fragmentManager

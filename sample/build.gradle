@@ -29,12 +29,6 @@ android {
 }
 
 dependencies {
-    // Android Support
     implementation Deps.supportAppCompat
-
-    // Kotlin
-    implementation Deps.kotlinStdLib
-
-    // Rx Activity Result
     implementation project(':rxactivityresult')
 }

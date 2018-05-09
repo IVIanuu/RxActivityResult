@@ -13,7 +13,7 @@ object Versions {
     const val rxJava = "2.1.13"
     const val support = "27.1.1"
 }
-//
+
 object Deps {
     const val androidGradlePlugin = "com.android.tools.build:gradle:3.1.2"
 
@@ -23,6 +23,7 @@ object Deps {
     const val mavenGradlePlugin = "com.github.dcendents:android-maven-gradle-plugin:${Versions.mavenGradle}"
 
     const val supportAppCompat = "com.android.support:appcompat-v7:${Versions.support}"
+    const val supportFragments = "com.android.support:support-fragment:${Versions.support}"
 
     const val rxJava = "io.reactivex.rxjava2:rxjava:${Versions.rxJava}"
 }

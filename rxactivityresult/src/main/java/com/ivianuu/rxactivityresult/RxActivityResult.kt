@@ -16,7 +16,7 @@
 
 package com.ivianuu.rxactivityresult
 
-import android.app.Activity
+import android.support.v4.app.FragmentActivity
 
 /**
  * Factory for [ActivityResultStarter]'s
@@ -24,5 +24,5 @@ import android.app.Activity
 object RxActivityResult {
 
     @JvmStatic
-    fun get(activity: Activity) = RxActivityResultFragment.get(activity)
+    fun get(activity: FragmentActivity) = RxActivityResultFragment.get(activity)
 }

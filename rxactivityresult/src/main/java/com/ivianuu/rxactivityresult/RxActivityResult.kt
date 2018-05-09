@@ -25,4 +25,5 @@ object RxActivityResult {
 
     @JvmStatic
     fun get(activity: FragmentActivity) = RxActivityResultFragment.get(activity)
+
 }

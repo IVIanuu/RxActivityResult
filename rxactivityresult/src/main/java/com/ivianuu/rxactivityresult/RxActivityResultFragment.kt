@@ -24,14 +24,14 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import io.reactivex.Maybe
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.MaybeSubject
 
 /**
  * Handles the activity results
  */
 class RxActivityResultFragment : Fragment(), ActivityResultStarter, Application.ActivityLifecycleCallbacks {
 
-    private val subjects = HashMap<Int, PublishSubject<ActivityResult>>()
+    private val subjects = HashMap<Int, MaybeSubject<ActivityResult>>()
 
     private val requireActivityActions = ArrayList<(() -> Unit)>()
 
@@ -54,20 +54,31 @@ class RxActivityResultFragment : Fragment(), ActivityResultStarter, Application.
         handleActivityResult(requestCode, resultCode, data)
     }
 
-    override fun start(intent: Intent): Maybe<ActivityResult> {
-        return startForResult(intent)
+    override fun start(intent: Intent, requestCode: Int): Maybe<ActivityResult> {
+        return startForResult(intent, null, requestCode)
     }
 
-    override fun start(intent: Intent, options: Bundle): Maybe<ActivityResult> {
-        return startForResult(intent, options)
+    override fun start(intent: Intent, options: Bundle, requestCode: Int): Maybe<ActivityResult> {
+        return startForResult(intent, options, requestCode)
     }
 
-    override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {}
-    override fun onActivityStarted(activity: Activity?) {}
-    override fun onActivityPaused(activity: Activity?) {}
-    override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {}
-    override fun onActivityResumed(activity: Activity?) {}
-    override fun onActivityStopped(activity: Activity?) {}
+    override fun result(requestCode: Int): Maybe<ActivityResult> {
+        val subject = subjects[requestCode]
+        return subject ?: Maybe.empty()
+    }
+
+    override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
+    }
+    override fun onActivityStarted(activity: Activity?) {
+    }
+    override fun onActivityPaused(activity: Activity?) {
+    }
+    override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
+    }
+    override fun onActivityResumed(activity: Activity?) {
+    }
+    override fun onActivityStopped(activity: Activity?) {
+    }
 
     override fun onActivityDestroyed(activity: Activity?) {
         if (this.act == activity) {
@@ -79,26 +90,32 @@ class RxActivityResultFragment : Fragment(), ActivityResultStarter, Application.
         activeActivityResultFragments.remove(activity)
     }
 
-    private fun startForResult(intent: Intent,
-                               options: Bundle? = null): Maybe<ActivityResult> {
-        val requestCode = RequestCodeGenerator.generate()
+    private fun startForResult(
+        intent: Intent,
+        options: Bundle? = null,
+        requestCode: Int
+    ): Maybe<ActivityResult> {
+        val requestCode = if (requestCode != -1) {
+            requestCode
+        } else {
+            RequestCodeGenerator.generate()
+        }
 
-        val subject = PublishSubject.create<ActivityResult>()
+        val subject = MaybeSubject.create<ActivityResult>()
         subjects[requestCode] = subject
 
         requireActivity { startActivityForResult(intent, requestCode, options) }
 
         return subject
-            .take(1)
-            .singleElement()
     }
 
-    private fun handleActivityResult(requestCode: Int,
-                                     resultCode: Int,
-                                     data: Intent?) {
-        val subject = subjects.remove(requestCode) ?: return
-        subject.onNext(ActivityResult(requestCode, resultCode, data))
-        subject.onComplete()
+    private fun handleActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        val subject = subjects[requestCode] ?: return
+        subject.onSuccess(ActivityResult(requestCode, resultCode, data))
     }
 
     private fun requireActivity(action: () -> Unit) {

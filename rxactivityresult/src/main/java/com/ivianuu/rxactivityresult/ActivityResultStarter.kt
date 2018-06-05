@@ -25,7 +25,9 @@ import io.reactivex.Maybe
  */
 interface ActivityResultStarter {
 
-    fun start(intent: Intent): Maybe<ActivityResult>
+    fun start(intent: Intent, requestCode: Int = -1): Maybe<ActivityResult>
 
-    fun start(intent: Intent, options: Bundle): Maybe<ActivityResult>
+    fun start(intent: Intent, options: Bundle, requestCode: Int = -1): Maybe<ActivityResult>
+
+    fun result(requestCode: Int): Maybe<ActivityResult>
 }

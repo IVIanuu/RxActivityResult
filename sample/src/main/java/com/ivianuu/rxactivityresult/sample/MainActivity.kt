@@ -22,6 +22,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import com.ivianuu.rxactivityresult.ActivityResult
+import com.ivianuu.rxactivityresult.RequestCodeGenerator
 import com.ivianuu.rxactivityresult.RxActivityResult
 import io.reactivex.disposables.Disposable
 
@@ -31,19 +33,44 @@ class MainActivity : AppCompatActivity() {
 
     private var disposable: Disposable? = null
 
+    private var requestCode = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        if (savedInstanceState != null) {
+            requestCode = savedInstanceState.getInt("request_code", -1)
+        }
+
+        if (requestCode != -1) {
+            activityResultStarter.result(requestCode)
+                .subscribe(::onResult)
+                .let { disposable = it }
+        }
+
         findViewById<Button>(R.id.request).setOnClickListener {
-            activityResultStarter.start(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
-                    .subscribe { Log.d("RxActivityResult", "on result $it") }
+            requestCode = RequestCodeGenerator.generate()
+            activityResultStarter.start(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), requestCode)
+                    .subscribe(::onResult)
                     .let { disposable = it }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (requestCode != -1) {
+            outState.putInt("request_code", requestCode)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         disposable?.dispose()
+    }
+
+    private fun onResult(result: ActivityResult) {
+        requestCode = -1
+        Log.d("RxActivityResult", "on result $result")
     }
 }

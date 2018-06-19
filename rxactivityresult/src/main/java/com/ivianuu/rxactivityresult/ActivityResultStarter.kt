@@ -30,4 +30,5 @@ interface ActivityResultStarter {
     fun start(intent: Intent, options: Bundle, requestCode: Int = -1): Maybe<ActivityResult>
 
     fun result(requestCode: Int): Maybe<ActivityResult>
+
 }
